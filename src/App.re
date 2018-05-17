@@ -1,4 +1,4 @@
-/* [%bs.raw {|require('./App.css')|}]; */
+[%bs.raw {|require('./App.css')|}];
 
 /* [@bs.module] external logo : string = "./logo.svg"; */
 
@@ -11,6 +11,7 @@ let make = (~message, _children) => {
   render: _self =>
     <div className="App">
       <GithubPage headline="Github Scraper"/>
+      <Profile/>
       <Todo name="car"/>
     </div>,
 };
