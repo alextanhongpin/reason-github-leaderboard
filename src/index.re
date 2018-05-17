@@ -8,4 +8,8 @@ ReactDOMRe.renderToElementWithId(
   "root",
 );
 
+/* Push our current URI to the router after we render the application.
+This will persist the current route when you hit refresh. */
+ReasonReact.Router.push("");
+
 register_service_worker();
