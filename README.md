@@ -11,6 +11,17 @@ You need to add the folder that contains the `.re` files to be compiled in `bsco
   "sources": ["src", "src/components"],
 ```
 
+## Visual Studio Code error
+
+Cannot find merlin binary at "ocamlmerlin".
+
+```
+{
+    "ocaml.merlinPath": "/Users/nick/.opam/system/bin/ocamlmerlin",
+    "reason.path.ocamlmerlin": "/Users/nick/.opam/system/bin/ocamlmerlin"
+}
+```
+
 This project was bootstrapped with [Create React App](https://github.com/facebookincubator/create-react-app).
 
 Below you will find some information on how to perform common tasks.<br>
