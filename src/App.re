@@ -42,7 +42,12 @@ let make = (~message, _children) => {
       
       (
         switch state.route {
-        | HomePage => <div>(ReasonReact.string("This is the home page"))</div>
+        | HomePage => 
+          <div>
+            <div>(ReasonReact.string("This is the home page"))</div>
+            <UserCounter/>
+            <RepoCounter/>
+          </div>
         | ProfilePage(user) => 
           <div>
             <User user/>

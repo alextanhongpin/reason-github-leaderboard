@@ -1,4 +1,15 @@
 /* https://github.com/reasonml-community/reason-react-example/blob/master/src/fetch/FetchExample.re */
+
+/* - user_count
+- user_count_by_years
+- repo_count
+- leaderboard_last_updated_repos
+- leaderboard_most_stars_repos
+- leaderboard_most_watchers_repos
+- leaderboard_most_repos
+- leaderboard_most_repos_by_language
+- leaderboard_languages */
+
 let baseUrl = "http://localhost:5000/analytics/profiles?login=";
 
 type language = {
