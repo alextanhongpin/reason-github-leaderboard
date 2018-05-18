@@ -2,7 +2,7 @@
 
 type user = {
   avatarUrl: string,
-  bio: string,
+  bio: option(string),
   blog: string,
   createdAt: string,
   email: string,
@@ -19,13 +19,11 @@ type user = {
 
 type users = {data: list(user)};
 
-type state = user;
-
 module Decode = {
   let user = json =>
     Json.Decode.{
       avatarUrl: json |> field("avatar_url", string),
-      bio: json |> field("bio", string),
+      bio: json |> optional(field("bio", string)),
       blog: json |> field("blog", string),
       createdAt: json |> field("created_at", string),
       email: json |> field("email", string),
@@ -42,59 +40,64 @@ module Decode = {
   let users = json => Json.Decode.{data: json |> field("data", list(user))};
 };
 
+type state = 
+  | Loading
+  | Error
+  | Success(user);
+
 type action =
-  | FetchUser(user)
-  | NoOp;
+  | Fetch
+  | FetchSuccess(user)
+  | FetchError;
 
 let component = ReasonReact.reducerComponent("User");
 
 let make = (~user="", _children) => {
   ...component,
-  initialState: () => {
-    login: "",
-    avatarUrl: "",
-    bio: "",
-    blog: "",
-    createdAt: "",
-    email: "",
-    followers: 0,
-    following: 0,
-    htmlUrl: "",
-    location: "",
-    name: "",
-    privateGists: None,
-    publicGists: 0,
-    publicRepos: 0,
-  },
+  initialState: () => Loading,
   didMount: self => {
-    Js.Promise.(
-      Fetch.fetch("http://localhost:5000/users/" ++ user)
-      |> then_(Fetch.Response.json)
-      |> then_(json => {
-            json 
-            |> Decode.users
-            |> (users => users.data)
-            |> (([user, ..._rest]) => self.send(FetchUser(user)))
-            |> resolve
-          }
-        )
-      |> catch(err => 
-        err
-        |> Js.log
-        |> (_ => Js.Promise.resolve(self.send(NoOp)))
-      )
-      |> ignore
-    );
+    self.send(Fetch)
   },
   reducer: (action, state) =>
     switch (action) {
-    | FetchUser(user) => ReasonReact.Update(user)
-    | NoOp => ReasonReact.NoUpdate
+    | Fetch =>
+      ReasonReact.UpdateWithSideEffects(
+        Loading,
+        (
+          self => 
+            Js.Promise.(
+              Fetch.fetch("http://localhost:5000/users/" ++ user)
+              |> then_(Fetch.Response.json)
+              |> then_(json => {
+                    json 
+                    |> Decode.users
+                    |> (users => users.data)
+                    |> (([user, ..._rest]) => self.send(FetchSuccess(user)))
+                    |> resolve
+                  }
+                )
+              |> catch(err => 
+                err
+                |> Js.log
+                |> ((_) => self.send(FetchError))
+                |> resolve
+              )
+              |> ignore
+            )
+        )
+      )
+    | FetchError => ReasonReact.Update(Error)
+    | FetchSuccess(user) => ReasonReact.Update(Success(user))
     },
   render: self => {
-    let {avatarUrl} = self.state;
-    <div>
-      <img src=(avatarUrl) width="320" height="auto"/>
-    </div>;
+    switch self.state {
+    | Loading => <Loader/>
+    | Error => <div>(ReasonReact.string("Error occured"))</div>
+    | Success(user) =>
+      let {avatarUrl} = user;
+      <div>
+        <img src=(avatarUrl) width="320" height="auto"/>
+      </div>
+    }
   },
 };

@@ -67,9 +67,9 @@ type state =
   | Success(profile);
 
 type action =
-  | FetchProfile
-  | FetchProfileSuccess(profile)
-  | FetchProfileError;
+  | Fetch
+  | FetchSuccess(profile)
+  | FetchError;
 
 let component = ReasonReact.reducerComponent("Profile");
 
@@ -77,11 +77,11 @@ let make = (~user="", _children) => {
   ...component,
   initialState: () => Loading,
   didMount: self => {
-    self.send(FetchProfile);
+    self.send(Fetch);
   },
   reducer: (action, state) =>
     switch (action) {
-    | FetchProfile => 
+    | Fetch => 
       ReasonReact.UpdateWithSideEffects(
         Loading,
         (self => 
@@ -91,21 +91,21 @@ let make = (~user="", _children) => {
             |> then_(json =>
                 json 
                 |> Decode.profile
-                |> (profile => self.send(FetchProfileSuccess(profile)))
+                |> (profile => self.send(FetchSuccess(profile)))
                 |> resolve
               )
             |> catch(err => 
                 err
                 |> Js.log
-                |> ((_) => self.send(FetchProfileError))
+                |> ((_) => self.send(FetchError))
                 |> resolve
               )
             |> ignore
           )
         )
       )
-    | FetchProfileSuccess(profile) => ReasonReact.Update(Success(profile))
-    | FetchProfileError => ReasonReact.Update(Error)
+    | FetchSuccess(profile) => ReasonReact.Update(Success(profile))
+    | FetchError => ReasonReact.Update(Error)
     },
   render: self => {
     switch self.state {

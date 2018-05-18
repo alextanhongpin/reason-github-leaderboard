@@ -21,7 +21,7 @@ let reducer = (action, state) =>
 let mapUrlToRoute = (url: ReasonReact.Router.url) =>
   switch url.path {
   | [] => HomePage
-  | ["profile", user] => ProfilePage(user)
+  | ["profiles", user] => ProfilePage(user)
   | _ => HomePage
   };
 
@@ -50,11 +50,7 @@ let make = (~message, _children) => {
           </div>
         }
       )
-      /* <GithubPage headline="Github Scraper"/> */
-      
-      <Link href="profile">(ReasonReact.string("profole"))</Link>
-      /* <Todo name="car"/> */
-      
+      <Link href="/profiles">(ReasonReact.string("profiles"))</Link>
     </div>,
 };
 
