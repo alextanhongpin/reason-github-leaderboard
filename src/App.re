@@ -47,6 +47,12 @@ let make = (~message, _children) => {
             <div>(ReasonReact.string("This is the home page"))</div>
             <UserCounter/>
             <RepoCounter/>
+            <LeaderboardLastUpdateRepos/>
+            <LeaderboardMostStarsRepos/>
+            <LeaderboardMostWatchersRepos/>
+            <LeaderboardMostRepos/>
+            <LeaderboardLanguage/>
+            <LeaderboardMostReposByLanguage/>
           </div>
         | ProfilePage(user) => 
           <div>
