@@ -1,7 +1,9 @@
 [%bs.raw {|require('./App.css')|}];
 
+type user = string;
+
 type route = 
-  | ProfilePage
+  | ProfilePage(user)
   | HomePage;
 
 type action = 
@@ -19,7 +21,7 @@ let reducer = (action, state) =>
 let mapUrlToRoute = (url: ReasonReact.Router.url) =>
   switch url.path {
   | [] => HomePage
-  | ["profile"] => ProfilePage
+  | ["profile", user] => ProfilePage(user)
   | _ => HomePage
   };
 
@@ -37,16 +39,22 @@ let make = (~message, _children) => {
   ],
   render: ({ state }) =>
     <div className="App">
+      
       (
         switch state.route {
         | HomePage => <div>(ReasonReact.string("This is the home page"))</div>
-        | ProfilePage => <Profile/>
+        | ProfilePage(user) => 
+          <div>
+            <User user/>
+            <Profile user/>
+          </div>
         }
       )
       /* <GithubPage headline="Github Scraper"/> */
       
       <Link href="profile">(ReasonReact.string("profole"))</Link>
       /* <Todo name="car"/> */
+      
     </div>,
 };
 

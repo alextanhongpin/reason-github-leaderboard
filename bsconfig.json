@@ -1,6 +1,9 @@
 {
   "name": "reason-scripts",
-  "sources": ["src", "src/components"],
+  "sources": [
+    "src",
+    "src/components"
+  ],
   "bs-dependencies": [
     "@glennsl/bs-jest",
     "@glennsl/bs-json",
@@ -10,7 +13,9 @@
   "reason": {
     "react-jsx": 2
   },
-  "bsc-flags": ["-bs-super-errors"],
+  "bsc-flags": [
+    "-bs-super-errors"
+  ],
   "refmt": 3,
   "package-specs": {
     "module": "es6",

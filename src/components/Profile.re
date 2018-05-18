@@ -1,3 +1,5 @@
+/* https://github.com/reasonml-community/reason-react-example/blob/master/src/fetch/FetchExample.re */
+
 type language = {
   lang: string,
   score: float,
@@ -16,25 +18,6 @@ type match = {
   htmlUrl: string,
 };
 
-type user = {
-  avatarUrl: string,
-  bio: string,
-  blog: string,
-  createdAt: string,
-  email: string,
-  followers: int,
-  following: int,
-  htmlUrl: string,
-  location: string,
-  login: string,
-  name: string,
-  privateGists: int,
-  publicGists: int,
-  publicRepos: int,
-};
-
-type users = {data: list(user)};
-
 type profile = {
   login: string,
   totalCount: int,
@@ -44,11 +27,6 @@ type profile = {
   watchersCount: int,
   forksCount: int,
   matches: list(match),
-};
-
-type state = {
-  user,
-  profile,
 };
 
 module Decode = {
@@ -81,119 +59,81 @@ module Decode = {
       forksCount: json |> field("forksCount", int),
       matches: json |> field("matches", list(match)),
     };
-  let user = json =>
-    Json.Decode.{
-      avatarUrl: json |> field("avatar_url", string),
-      bio: json |> field("bio", string),
-      blog: json |> field("blog", string),
-      createdAt: json |> field("created_at", string),
-      email: json |> field("email", string),
-      followers: json |> field("followers", int),
-      following: json |> field("following", int),
-      htmlUrl: json |> field("html_url", string),
-      location: json |> field("location", string),
-      login: json |> field("login", string),
-      name: json |> field("name", string),
-      privateGists: json |> field("private_gists", int),
-      publicGists: json |> field("public_gists", int),
-      publicRepos: json |> field("public_repos", int),
-    };
-  let users = json => Json.Decode.{data: json |> field("data", list(user))};
 };
 
+type state = 
+  | Loading
+  | Error
+  | Success(profile);
+
 type action =
-  | FetchProfile(profile)
-  | FetchUser(user)
-  | NoOp;
+  | FetchProfile
+  | FetchProfileSuccess(profile)
+  | FetchProfileError;
 
 let component = ReasonReact.reducerComponent("Profile");
 
-let make = _children => {
+let make = (~user="", _children) => {
   ...component,
-  initialState: () => {
-    profile: {
-      login: "",
-      totalCount: 0,
-      topLanguages: [],
-      topKeywords: [],
-      stargazersCount: 0,
-      watchersCount: 0,
-      forksCount: 0,
-      matches: [],
-    },
-    user: {
-      login: "",
-      avatarUrl: "",
-      bio: "",
-      blog: "",
-      createdAt: "",
-      email: "",
-      followers: 0,
-      following: 0,
-      htmlUrl: "",
-      location: "",
-      name: "",
-      privateGists: 0,
-      publicGists: 0,
-      publicRepos: 0,
-    },
-  },
+  initialState: () => Loading,
   didMount: self => {
-    Js.Promise.(
-      Fetch.fetch(
-        "http://localhost:5000/analytics/profiles?login=alextanhongpin",
-      )
-      |> then_(Fetch.Response.json)
-      |> then_(json => {
-           let data = json |> Decode.profile;
-           self.send(FetchProfile(data));
-           resolve();
-         })
-    )
-    |> ignore;
-    Js.Promise.(
-      Fetch.fetch("http://localhost:5000/users/alextanhongpin")
-      |> then_(Fetch.Response.json)
-      |> then_(json => {
-           let users = json |> Decode.users;
-           let [user] = users.data;
-           self.send(FetchUser(user));
-           resolve();
-         })
-    )
-    |> ignore;
+    self.send(FetchProfile);
   },
   reducer: (action, state) =>
     switch (action) {
-    | FetchProfile(profile) => ReasonReact.Update({...state, profile})
-    | FetchUser(user) => ReasonReact.Update({...state, user})
-    | NoOp => ReasonReact.NoUpdate
+    | FetchProfile => 
+      ReasonReact.UpdateWithSideEffects(
+        Loading,
+        (self => 
+          Js.Promise.(
+            Fetch.fetch("http://localhost:5000/analytics/profiles?login=" ++ user)
+            |> then_(Fetch.Response.json)
+            |> then_(json =>
+                json 
+                |> Decode.profile
+                |> (profile => self.send(FetchProfileSuccess(profile)))
+                |> resolve
+              )
+            |> catch(err => 
+                err
+                |> Js.log
+                |> ((_) => self.send(FetchProfileError))
+                |> resolve
+              )
+            |> ignore
+          )
+        )
+      )
+    | FetchProfileSuccess(profile) => ReasonReact.Update(Success(profile))
+    | FetchProfileError => ReasonReact.Update(Error)
     },
   render: self => {
-    let {login, totalCount, stargazersCount, matches} = self.state.profile;
-    let {avatarUrl} = self.state.user;
-    <div>
-      <h3> (ReasonReact.string(login)) </h3>
+    switch self.state {
+    | Loading => <Loader/>
+    | Error => <div>(ReasonReact.string("Error occured"))</div>
+    | Success({login, totalCount, stargazersCount, matches}) =>
       <div>
-        (ReasonReact.string("totalCount:"))
-        <b> (ReasonReact.string(string_of_int(totalCount))) </b>
+        <h3> (ReasonReact.string(login)) </h3>
+          <div>
+            (ReasonReact.string("totalCount:"))
+            <b> (ReasonReact.string(string_of_int(totalCount))) </b>
+          </div>
+          <div>
+            (ReasonReact.string("stargazersCount:"))
+            <b> (ReasonReact.string(string_of_int(stargazersCount))) </b>
+          </div>
+          (
+            matches
+            |> List.map(({login, score, avatarUrl, htmlUrl}) =>
+                <div>
+                  <img src=(avatarUrl) width="30" height="auto" />
+                  <a href=htmlUrl> (ReasonReact.string(login)) </a>
+                </div>
+              )
+            |> Array.of_list
+            |> ReasonReact.arrayToElement
+          )
       </div>
-      <div>
-        (ReasonReact.string("stargazersCount:"))
-        <b> (ReasonReact.string(string_of_int(stargazersCount))) </b>
-      </div>
-      <img src=(avatarUrl) width="320" height="auto"/>
-      (
-        matches
-        |> List.map(({login, score, avatarUrl, htmlUrl}) =>
-             <div>
-               <img src=(avatarUrl) width="30" height="auto" />
-               <a href=htmlUrl> (ReasonReact.string(login)) </a>
-             </div>
-           )
-        |> Array.of_list
-        |> ReasonReact.arrayToElement
-      )
-    </div>;
+    }
   },
 };
