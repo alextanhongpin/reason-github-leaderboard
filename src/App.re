@@ -1,5 +1,7 @@
 [%bs.raw {|require('./App.css')|}];
 
+let str = ReasonReact.string;
+
 type user = string;
 
 type route = 
@@ -39,20 +41,20 @@ let make = (~message, _children) => {
   ],
   render: ({ state }) =>
     <div className="App">
-      
+      <Header/>
       (
         switch state.route {
         | HomePage => 
           <div>
-            <div>(ReasonReact.string("This is the home page"))</div>
-            <UserCounter/>
+            <p>(str("Find out the latest statistics on Github Users in Malaysia."))</p>
+            <UserCounter/>(str(" "))
             <RepoCounter/>
             <LeaderboardLastUpdateRepos/>
-            <LeaderboardMostStarsRepos/>
+            /* <LeaderboardMostStarsRepos/>
             <LeaderboardMostWatchersRepos/>
             <LeaderboardMostRepos/>
             <LeaderboardLanguage/>
-            <LeaderboardMostReposByLanguage/>
+            <LeaderboardMostReposByLanguage/> */
           </div>
         | ProfilePage(user) => 
           <div>
@@ -61,25 +63,6 @@ let make = (~message, _children) => {
           </div>
         }
       )
-      <Link href="/profiles">(ReasonReact.string("profiles"))</Link>
+      <Link href="/profiles">(str("profiles"))</Link>
     </div>,
 };
-
-/* 
-[%bs.raw {|require('./App.css')|}];
-
-/* [@bs.module] external logo : string = "./logo.svg"; */
-
-/* [@bs.module] external Test : ReasonReact.reactClass = "./components/Test" */
-
-let component = ReasonReact.statelessComponent("App");
-
-let make = (~message, _children) => {
-  ...component,
-  render: _self =>
-    <div className="App">
-      <GithubPage headline="Github Scraper"/>
-      <Profile/>
-      <Todo name="car"/>
-    </div>,
-}; */

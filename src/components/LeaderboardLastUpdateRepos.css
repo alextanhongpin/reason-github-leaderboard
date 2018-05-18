@@ -1,0 +1,47 @@
+.repo-holder {
+  display: grid;
+  grid-template-rows: auto;
+  grid-row-gap: .5rem;
+  max-width: 640px;
+  margin: auto;
+}
+
+.repo {
+  display: grid;
+  grid-template-columns: 30px 1fr;
+  grid-column-gap: .5rem;
+}
+
+.repo__image-holder {
+  width: 30px;
+  height: 30px;
+  overflow: hidden;
+  border-radius: 3px;
+}
+.repo__info-holder {
+  border: 1px solid #E7E7E7; 
+  text-align: left;
+  padding: 1rem;
+}
+
+.repo__description {
+  color: darkslategray;
+  font-size: 0.8rem;
+}
+
+.placeholder {
+  height: 40px; 
+  width: 40px;
+  background: silver;
+}
+
+.language {
+  display: inline-block;
+  width: .7rem;
+  height: .7rem;
+  border-radius: 50%;
+}
+
+.icon-star:before {
+  content: "\2605";
+}
