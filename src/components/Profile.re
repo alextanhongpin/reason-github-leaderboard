@@ -1,4 +1,5 @@
 /* https://github.com/reasonml-community/reason-react-example/blob/master/src/fetch/FetchExample.re */
+let baseUrl = "http://localhost:5000/analytics/profiles?login=";
 
 type language = {
   lang: string,
@@ -86,7 +87,7 @@ let make = (~user="", _children) => {
         Loading,
         (self => 
           Js.Promise.(
-            Fetch.fetch("http://localhost:5000/analytics/profiles?login=" ++ user)
+            Fetch.fetch(baseUrl ++ user)
             |> then_(Fetch.Response.json)
             |> then_(json =>
                 json 
