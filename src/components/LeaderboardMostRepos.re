@@ -4,7 +4,7 @@ type repo = {
   count: int,
   login: string,
   avatar_url: option(string),
-  html_url: string,
+  html_url: string
 };
 
 type counter = {
@@ -81,27 +81,24 @@ let make = _children => {
     | Error => <div> (str("Error")) </div>
     | Success({analyticType, repos, createdAt, updatedAt}) =>
       <div>
-        <h2>(str("Most repos:"))</h2>
+        <h2> (str("Most repos:")) </h2>
         (
           repos
-          |> List.map(
-            ({count, login, avatar_url, html_url}) => 
-              <div key=login>
-                <b>(str(login))</b>
-                (
-                  switch avatar_url {
-                  | Some(src) => <img src width="40" height="auto"/>
-                  | None => ReasonReact.null
-                  }
-                )
-
-                <div>(str(string_of_int(count)))</div>
-              </div>
-          )
+          |> List.map(({count, login, avatar_url, html_url}) =>
+               <div key=login>
+                 <b> (str(login)) </b>
+                 (
+                   switch avatar_url {
+                   | Some(src) => <img src width="40" height="auto" />
+                   | None => ReasonReact.null
+                   }
+                 )
+                 <div> (str(string_of_int(count))) </div>
+               </div>
+             )
           |> Array.of_list
           |> ReasonReact.arrayToElement
         )
       </div>
     }
 };
- 

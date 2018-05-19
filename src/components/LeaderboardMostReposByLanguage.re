@@ -4,12 +4,12 @@ type owner = {
   avatar_url: string,
   html_url: string,
   login: string,
-  count: int,
+  count: int
 };
 
 type repo = {
   lang: string,
-  top: list(owner),
+  top: list(owner)
 };
 
 type counter = {
@@ -20,17 +20,17 @@ type counter = {
 };
 
 module Decode = {
-  let owner = json => 
+  let owner = json =>
     Json.Decode.{
       avatar_url: json |> field("avatar_url", string),
       html_url: json |> field("html_url", string),
       login: json |> field("login", string),
-      count: json |> field("count", int),
+      count: json |> field("count", int)
     };
   let repo = json =>
     Json.Decode.{
       lang: json |> field("lang", string),
-      top: json |> field("top", list(owner)),
+      top: json |> field("top", list(owner))
     };
   let counter = json =>
     Json.Decode.{
@@ -91,32 +91,29 @@ let make = _children => {
     | Error => <div> (str("Error")) </div>
     | Success({analyticType, repos, createdAt, updatedAt}) =>
       <div>
-        <h2>(str("Most repos by language:"))</h2>
+        <h2> (str("Most repos by language:")) </h2>
         (
           repos
-          |> List.map(
-            ({lang, top}) => 
-              <div key=lang>
-                <b>(str(lang))</b>
-                
-                (
-                  top
-                  |> List.map(
-                    ({avatar_url, html_url, login, count}) =>
-                      <div key=login>
-                        <img src=(avatar_url) width="40" height="auto"/>
-                        (str(login))(str(string_of_int(count)))
-                      </div>
-                  )
-                  |> Array.of_list
-                  |> ReasonReact.arrayToElement
-                )
-              </div>
-          )
+          |> List.map(({lang, top}) =>
+               <div key=lang>
+                 <b> (str(lang)) </b>
+                 (
+                   top
+                   |> List.map(({avatar_url, html_url, login, count}) =>
+                        <div key=login>
+                          <img src=avatar_url width="40" height="auto" />
+                          (str(login))
+                          (str(string_of_int(count)))
+                        </div>
+                      )
+                   |> Array.of_list
+                   |> ReasonReact.arrayToElement
+                 )
+               </div>
+             )
           |> Array.of_list
           |> ReasonReact.arrayToElement
         )
       </div>
     }
 };
- 

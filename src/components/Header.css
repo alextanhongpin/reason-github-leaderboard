@@ -1,0 +1,19 @@
+.header {
+  background: #2f4f4f;
+  color: white;
+  height: 3rem;
+  margin: 0;
+  padding: 0 1rem;
+  line-height: 3rem;
+  font-size: 1rem;
+  font-weight: bold;
+  box-shadow: 0 5px 15px rgba(47, 79, 79, .4);
+}
+
+.header-top {
+  font-size: .6rem;
+  position: relative;
+  top: -.4rem;
+  font-weight: normal;
+  padding: 0 .25rem;
+}

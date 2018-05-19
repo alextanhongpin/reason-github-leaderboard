@@ -2,13 +2,13 @@ type owner = {
   login: string,
   avatar_url: option(string),
   url: string,
-  html_url: string,
+  html_url: string
 };
 
 type repo = {
   name: string,
   full_name: string,
-  owner: owner,
+  owner,
   html_url: string,
   description: option(string),
   fork: bool,
@@ -16,7 +16,7 @@ type repo = {
   updated_at: string,
   stargazers_count: option(int),
   watchers_count: option(int),
-  language: option(string),
+  language: option(string)
 };
 
 module Decode = {
@@ -25,10 +25,9 @@ module Decode = {
       login: json |> field("login", string),
       avatar_url: json |> field("avatar_url", optional(string)),
       url: json |> field("url", string),
-      html_url: json |> field("html_url", string),
+      html_url: json |> field("html_url", string)
     };
-
-  let repo = json => 
+  let repo = json =>
     Json.Decode.{
       name: json |> field("name", string),
       full_name: json |> field("full_name", string),
@@ -40,6 +39,6 @@ module Decode = {
       updated_at: json |> field("updated_at", string),
       stargazers_count: json |> field("stargazers_count", optional(int)),
       watchers_count: json |> field("watchers_count", optional(int)),
-      language: json |> field("language", optional(string)),
+      language: json |> field("language", optional(string))
     };
 };

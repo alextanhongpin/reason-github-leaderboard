@@ -2,7 +2,7 @@
   display: grid;
   grid-template-rows: auto;
   grid-row-gap: .5rem;
-  max-width: 640px;
+  max-width: 560px;
   margin: auto;
 }
 
@@ -17,11 +17,25 @@
   height: 30px;
   overflow: hidden;
   border-radius: 3px;
+  border: 1px solid rgba(0, 0, 0, .1);
 }
 .repo__info-holder {
   border: 1px solid #E7E7E7; 
   text-align: left;
   padding: 1rem;
+}
+
+.repo__footer {
+  display: grid;
+  grid-template-columns: repeat(3, max-content);
+  grid-column-gap: .5rem;
+  align-items: center;
+  font-size: 0.7rem;
+}
+
+.repo__footer-date {
+  vertical-align: middle;
+  display: inline-block;
 }
 
 .repo__description {
@@ -35,8 +49,15 @@
   background: silver;
 }
 
-.language {
+
+.language-holder,
+.language-icon,
+.language-label {
   display: inline-block;
+  vertical-align: middle;
+}
+
+.language-icon {
   width: .7rem;
   height: .7rem;
   border-radius: 50%;

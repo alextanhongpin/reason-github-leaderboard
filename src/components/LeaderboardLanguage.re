@@ -2,7 +2,7 @@ let baseUrl = "http://localhost:5000/analytics?type=leaderboard_languages";
 
 type language = {
   score: int,
-  lang: string,
+  lang: string
 };
 
 type counter = {
@@ -16,9 +16,8 @@ module Decode = {
   let language = json =>
     Json.Decode.{
       score: json |> field("score", int),
-      lang: json |> field("lang", string),
+      lang: json |> field("lang", string)
     };
-
   let counter = json =>
     Json.Decode.{
       analyticType: json |> field("type", string),
@@ -78,20 +77,18 @@ let make = _children => {
     | Error => <div> (str("Error")) </div>
     | Success({analyticType, languages, createdAt, updatedAt}) =>
       <div>
-        <h2>(str("Top languages:"))</h2>
+        <h2> (str("Top languages:")) </h2>
         (
           languages
-          |> List.map(
-            ({ score, lang }) => 
-              <div key=lang>
-                <b>(str(lang))</b>
-                <div>(str(string_of_int(score)))</div>
-              </div>
-          )
+          |> List.map(({score, lang}) =>
+               <div key=lang>
+                 <b> (str(lang)) </b>
+                 <div> (str(string_of_int(score))) </div>
+               </div>
+             )
           |> Array.of_list
           |> ReasonReact.arrayToElement
         )
       </div>
     }
 };
- 

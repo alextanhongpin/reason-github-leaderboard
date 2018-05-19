@@ -1,4 +1,5 @@
 [%bs.raw {|require('./RepoCounter.css')|}];
+
 let baseUrl = "http://localhost:5000/analytics?type=repo_count";
 
 type counter = {
@@ -68,8 +69,8 @@ let make = _children => {
     | Error => <div> (str("Error")) </div>
     | Success({analyticType, count, createdAt, updatedAt}) =>
       <div className="repo-counter">
-        <h1>(str(string_of_int(count)))</h1>
-        <p>(str("Total Repos"))</p>
+        <h1> (str(string_of_int(count))) </h1>
+        <p> (str("Total Repos")) </p>
       </div>
     }
 };

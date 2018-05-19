@@ -1,3 +1,4 @@
+/* open MomentRe; */
 [%bs.raw {|require('./LeaderboardLastUpdateRepos.css')|}];
 
 let baseUrl = "http://localhost:5000/analytics?type=leaderboard_last_updated_repos";
@@ -69,67 +70,94 @@ let make = _children => {
     | Error => <div> (str("Error")) </div>
     | Success({analyticType, repos, createdAt, updatedAt}) =>
       <div className="leaderboard-last-updated-repos">
-        <h2>(str("Last updated repos in:"))</h2>
+        <h2> (str("Last Updated Repos")) </h2>
         <div className="repo-holder">
-        (
-          repos
-          |> List.map(
-            ({name, full_name, owner, html_url, description, fork, created_at, updated_at, stargazers_count, watchers_count, language}: Repo.repo) => 
-              <div key=(html_url) className="repo">
-                /* Image:Start */
-                <div className="repo__image-holder">
-                  (
-                    switch owner.avatar_url {
-                    | Some(src) => <img src width="30" height="auto"/>
-                    | None => <div className="placeholder"/>
-                    }
-                  )
-                </div>
-                /* Image:End */
-                  
-                /* Info:Start */
-                <div className="repo__info-holder">
-                  <b>(str(full_name))</b>
-                  <p className="repo__description">
-                  (
-                    switch description {
-                    | Some(description) => (str(description))
-                    | None => (str("No description available"))
-                    }
-                  )
-                  </p>
-                  <div>
-                    (
-                      switch stargazers_count {
-                      | Some(0) => ReasonReact.null
-                      | Some(count) => <small><span className="icon-star"/> <b>(str(string_of_int(count)))</b></small>
-                      | None => ReasonReact.null
-                      }
-                    )
-                    (
-                      switch language {
-                      | Some(language) => 
-                        <span>
-                          <span className="language" style=(
-                            ReactDOMRe.Style.make(~background=(Color.StringMap.find(language, Color.colors)), ())
-                          )/>
-                          (str(" "))
-                          <small><b>(str(language))</b></small>
-                        </span>
-                      | None => ReasonReact.null
-                      }
-                    )
-                    <small>(str(" "))(str(updated_at))</small>
-                  </div>
-                </div>
-                /* Info:End */
-              </div>
+          (
+            repos
+            |> List.map(
+                 (
+                   {
+                     name,
+                     full_name,
+                     owner,
+                     html_url,
+                     description,
+                     fork,
+                     created_at,
+                     updated_at,
+                     stargazers_count,
+                     watchers_count,
+                     language
+                   }: Repo.repo
+                 ) =>
+                 <div key=html_url className="repo">
+                   <div className="repo__image-holder">
+                     (
+                       switch owner.avatar_url {
+                       | Some(src) => <img src width="30" height="auto" />
+                       | None => <div className="placeholder" />
+                       }
+                     )
+                   </div>
+                   <div className="repo__info-holder">
+                     <b> (str(full_name)) </b>
+                     <p className="repo__description">
+                       (
+                         switch description {
+                         | Some(description) => str(description)
+                         | None => str("No description available")
+                         }
+                       )
+                     </p>
+                     <div className="repo__footer">
+                       (
+                         switch stargazers_count {
+                         | Some(0) => ReasonReact.null
+                         | Some(count) =>
+                           <div>
+                             <span className="icon-star" />
+                             (str(" "))
+                             (str(string_of_int(count)))
+                           </div>
+                         | None => ReasonReact.null
+                         }
+                       )
+                       (
+                         switch language {
+                         | Some(language) =>
+                           <span className="language-holder">
+                             <span
+                               className="language-icon"
+                               style=(
+                                 ReactDOMRe.Style.make(
+                                   ~background=
+                                     Color.StringMap.find(
+                                       language,
+                                       Color.colors
+                                     ),
+                                   ()
+                                 )
+                               )
+                             />
+                             (str(" "))
+                             <div className="language-label">
+                               (str(language))
+                             </div>
+                           </span>
+                         | None => ReasonReact.null
+                         }
+                       )
+                       <div className="repo__footer-date">
+                         (str(Date.parseDate(updated_at)))
+                       </div>
+                     </div>
+                   </div>
+                 </div>
+               )
+            |> Array.of_list
+            |> ReasonReact.arrayToElement
           )
-          |> Array.of_list
-          |> ReasonReact.arrayToElement
-        )
         </div>
       </div>
     }
 };
- 

@@ -69,8 +69,8 @@ let make = _children => {
     | Error => <div> (str("Error")) </div>
     | Success({analyticType, count, createdAt, updatedAt}) =>
       <div className="user-counter">
-        <h1>(str(string_of_int(count)))</h1>
-        <p>(str("Total Github Users"))</p>
+        <h1> (str(string_of_int(count))) </h1>
+        <p> (str("Total Github Users")) </p>
       </div>
     }
 };

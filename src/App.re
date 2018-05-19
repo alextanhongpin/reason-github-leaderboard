@@ -42,6 +42,9 @@ let make = (~message, _children) => {
   render: ({ state }) =>
     <div className="App">
       <Header/>
+      <br/>
+      <div className="tag">(str("most starred"))</div>
+      <div className="tag">(str("last updated"))</div>
       (
         switch state.route {
         | HomePage => 
@@ -50,7 +53,8 @@ let make = (~message, _children) => {
             <UserCounter/>(str(" "))
             <RepoCounter/>
             <LeaderboardLastUpdateRepos/>
-            /* <LeaderboardMostStarsRepos/>
+            <LeaderboardMostStarsRepos/>
+            /* 
             <LeaderboardMostWatchersRepos/>
             <LeaderboardMostRepos/>
             <LeaderboardLanguage/>
