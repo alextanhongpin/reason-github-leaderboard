@@ -1,0 +1,22 @@
+.leaderboard-holder {
+  font-size: var(--scale-200);
+  border: 1px solid var(--gallery);
+  padding: 0 .5rem;
+}
+
+.leaderboard-item {
+  display: grid;
+  grid-template-columns: repeat(4, max-content);
+  grid-column-gap: 0.5rem;
+  align-items: center;
+  height: 2rem;
+  line-height: 2rem;
+}
+
+.leaderboard-item:not(:last-child) {
+  border-bottom: 1px solid var(--gallery);
+}
+
+.leaderboard-item__rank {
+  color: darkslategray;
+}

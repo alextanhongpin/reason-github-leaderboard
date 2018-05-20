@@ -1,3 +1,4 @@
+[%bs.raw {|require('./Link.css')|}];
 let component = ReasonReact.statelessComponent("Link");
 
 let handleClick = (href, event) =>
@@ -10,9 +11,9 @@ let handleClick = (href, event) =>
 let make = (~href, children) => {
   ...component,
   render: _self =>
-    ReasonReact.createDomElement(
-      "a",
-      ~props={"href": href, "onClick": handleClick(href)},
-      children
-    )
+  ReasonReact.createDomElement(
+    "a",
+    ~props={"href": href, "onClick": handleClick(href), "className": "link"},
+    children
+  )
 };

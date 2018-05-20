@@ -2,8 +2,6 @@
   display: grid;
   grid-template-rows: auto;
   grid-row-gap: .5rem;
-  max-width: 560px;
-  margin: auto;
 }
 
 .repo {
@@ -30,7 +28,7 @@
   grid-template-columns: repeat(3, max-content);
   grid-column-gap: .5rem;
   align-items: center;
-  font-size: 0.7rem;
+  font-size: var(--scale-200);
 }
 
 .repo__footer-date {
@@ -40,7 +38,7 @@
 
 .repo__description {
   color: darkslategray;
-  font-size: 0.8rem;
+  font-size: var(--scale-200);
 }
 
 .placeholder {

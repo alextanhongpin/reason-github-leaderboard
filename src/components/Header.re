@@ -4,11 +4,15 @@ let str = ReasonReact.string;
 
 let component = ReasonReact.statelessComponent("Header");
 
-let make = _children => {
+let make = (~heading="", ~subheading="", _children) => {
   ...component,
   render: _self =>
     <header className="header">
-      (str("engineers.my"))
-      <span className="header-top"> (str("Github Malaysia")) </span>
+      <br/>
+      <Link href="/">
+        <h1 className="header-heading">(str(heading))</h1>
+        <span className="header-subheading"> (str(subheading)) </span>
+      </Link>
+      <br/>
     </header>
 };

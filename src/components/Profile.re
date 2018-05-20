@@ -1,14 +1,6 @@
-/* https://github.com/reasonml-community/reason-react-example/blob/master/src/fetch/FetchExample.re */
+[%bs.raw {|require('./Profile.css')|}];
 
-/* - user_count
-- user_count_by_years
-- repo_count
-- leaderboard_last_updated_repos
-- leaderboard_most_stars_repos
-- leaderboard_most_watchers_repos
-- leaderboard_most_repos
-- leaderboard_most_repos_by_language
-- leaderboard_languages */
+let str = ReasonReact.string;
 
 let baseUrl = "http://localhost:5000/analytics/profiles?login=";
 
@@ -91,6 +83,7 @@ let make = (~user="", _children) => {
   didMount: self => {
     self.send(Fetch);
   },
+
   reducer: (action, state) =>
     switch (action) {
     | Fetch => 
@@ -122,29 +115,88 @@ let make = (~user="", _children) => {
   render: self => {
     switch self.state {
     | Loading => <Loader/>
-    | Error => <div>(ReasonReact.string("Error occured"))</div>
-    | Success({login, totalCount, stargazersCount, matches}) =>
-      <div>
-        <h3> (ReasonReact.string(login)) </h3>
-          <div>
-            (ReasonReact.string("totalCount:"))
-            <b> (ReasonReact.string(string_of_int(totalCount))) </b>
-          </div>
-          <div>
-            (ReasonReact.string("stargazersCount:"))
-            <b> (ReasonReact.string(string_of_int(stargazersCount))) </b>
-          </div>
+    | Error => ReasonReact.null
+    | Success({stargazersCount, watchersCount, forksCount, topKeywords, topLanguages, matches}) =>
+      <div className="profile-holder">
+
+        <span className="tag" title="The total count of stars this user has for all repos">
+          <b>(str("Stars: "))</b>
+          (str(string_of_int(stargazersCount)))
+        </span>
+        <span className="tag" title="The total count of watchers this user have">
+          <b>(str("Watchers: "))</b>
+          (str(string_of_int(watchersCount)))
+        </span>
+        <span className="tag" title="The total count of forks this userhas for all repos">
+          <b>(str("Forks: "))</b>
+          (str(string_of_int(forksCount)))
+        </span>
+
+        <div>
+          <b>(str("Keywords: "))</b>
+          (
+            topKeywords
+            |> List.map(
+              ({ word, count }) => 
+              <span key=word className="keyword">
+              (str(word)) (str({js| × |js})) (str(string_of_int(count)))
+              </span>
+            )
+            |> Array.of_list
+            |> ReasonReact.array
+          )
+        </div>
+
+        <br/>
+
+        <div>
+          <b>(str("Languages: "))</b>
+          (
+            topLanguages
+            |> List.map(
+              ({ lang, score }) => {
+                let color = switch (Color.StringMap.find(lang, Color.colors)) {
+                | exception Not_found => "#000000"
+                | result => result
+                };
+                let percentage = string_of_int(int_of_float(score));
+
+                <span key=(lang) className="keyword"
+                style=(
+                  ReactDOMRe.Style.make(
+                    ~background=Color.hexToRgbA(color, 0.2),
+                    ~color=color,
+                    ()
+                  )
+                )
+                >
+                  (str(lang ++ "  " ++ percentage ++ "%"))
+                </span>
+              }
+            )
+            |> Array.of_list
+            |> ReasonReact.array
+          )
+        </div>
+        <br/>
+        <h3>(str("Similar Users"))</h3>
+        <div className="matches-holder">
           (
             matches
             |> List.map(({login, score, avatarUrl, htmlUrl}) =>
-                <div>
-                  <img src=(avatarUrl) width="30" height="auto" />
-                  <a href=htmlUrl> (ReasonReact.string(login)) </a>
-                </div>
+                <a href=("/users/" ++ login) className="matches-item link" key=login>
+                  <div>
+                    <img className="matches-item__img" src=(avatarUrl) width="80" height="auto" />
+                  </div>
+                  <b className="matches-item__name"> (ReasonReact.string(login)) </b>
+                </a>
               )
             |> Array.of_list
-            |> ReasonReact.arrayToElement
+            |> ReasonReact.array
           )
+        </div>
+        <br/>
+        <br/>
       </div>
     }
   },

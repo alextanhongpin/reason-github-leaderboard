@@ -64,49 +64,8 @@ let make = _children => {
   render: self =>
     switch self.state {
     | Loading => <Loader />
-    | Error => <div> (str("Error")) </div>
+    | Error => <Error/>
     | Success({analyticType, repos, createdAt, updatedAt}) =>
-      <div>
-        <h2> (str("Most watched repos:")) </h2>
-        (
-          repos
-          |> List.map(
-               (
-                 {
-                   name,
-                   full_name,
-                   owner,
-                   html_url,
-                   description,
-                   fork,
-                   created_at,
-                   updated_at,
-                   stargazers_count,
-                   watchers_count,
-                   language
-                 }: Repo.repo
-               ) =>
-               <div key=html_url>
-                 <b> (str(full_name)) </b>
-                 (
-                   switch owner.avatar_url {
-                   | Some(src) => <img src width="40" height="auto" />
-                   | None => ReasonReact.null
-                   }
-                 )
-                 <div>
-                   (
-                     switch description {
-                     | Some(description) => <div> (str(description)) </div>
-                     | None => ReasonReact.null
-                     }
-                   )
-                 </div>
-               </div>
-             )
-          |> Array.of_list
-          |> ReasonReact.arrayToElement
-        )
-      </div>
+      <Repo heading="Most Watchers" repos />
     }
 };

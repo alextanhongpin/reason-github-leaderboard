@@ -1,3 +1,5 @@
+[%bs.raw {|require('./User.css')|}];
+let str = ReasonReact.string;
 /* https://github.com/reasonml-community/reason-react-example/blob/master/src/fetch/FetchExample.re */
 let baseUrl = "http://localhost:5000/users/";
 
@@ -93,16 +95,101 @@ let make = (~user="", _children) => {
   render: self => {
     switch self.state {
     | Loading => <Loader/>
-    | Error => <div>(ReasonReact.string("Error occured"))</div>
-    | Success(user) =>
-      let {avatarUrl} = user;
-      switch avatarUrl {
-      | Some(url) =>       
-        <div>
-        <img src=(url) width="320" height="auto"/>
-        </div>
-      | None => <div>(ReasonReact.string("no image"))</div>
-      }
+    | Error => <Error subheading="The user might not exist or has been deleted."/>
+    | Success({login, name, avatarUrl, createdAt, bio, blog, followers, following, htmlUrl, publicGists, publicRepos}) =>
+      <div className="user-holder">
+        (
+          switch avatarUrl {
+          | Some(url) => <img src=(url) width="320" height="auto"/>
+          | None => ReasonReact.null
+          }
+        )
+        <h1>(str(login))</h1>
+        <p>(str(name))</p>
+
+        <span className="tag">
+          <b>(str("Created: "))</b>
+          (str(Date.parseDate(createdAt)))
+        </span>
+        (
+          switch blog {
+          | Some(blog) => 
+            <span className="tag">
+              <b>(str("Website: "))</b>
+              <a href=(blog) target="_blank">(str(blog))</a>
+            </span>
+          | None => ReasonReact.null
+          }
+        )
+
+        (
+          switch htmlUrl {
+          | Some(htmlUrl) => 
+            <span className="tag">
+              <b>(str("Github: "))</b>
+              <a href=(htmlUrl) target="_blank">(str(htmlUrl))</a>
+            </span>
+          | None => ReasonReact.null
+          }
+        )
+        
+        (
+          switch bio {
+          | Some(bio) => 
+            <span className="tag">
+              <b>(str("Bio: "))</b>
+              (str(bio))
+            </span>
+          | None => ReasonReact.null
+          }
+        )
+
+        (
+          switch followers {
+          | Some(followers) => 
+            <span className="tag">
+              <b>(str("Followers: "))</b>
+              (str(string_of_int(followers)))
+            </span>
+          | None => ReasonReact.null
+          }
+        )
+
+        (
+          switch following {
+          | Some(following) => 
+            <span className="tag">
+              <b>(str("Following: "))</b>
+              (str(string_of_int(following)))
+            </span>
+          | None => ReasonReact.null
+          }
+        )
+
+
+        (
+          switch publicGists {
+          | Some(publicGists) => 
+            <span className="tag">
+              <b>(str("Public Gists: "))</b>
+              (str(string_of_int(publicGists)))
+            </span>
+          | None => ReasonReact.null
+          }
+        )
+
+        (
+          switch publicRepos {
+          | Some(publicRepos) => 
+            <span className="tag">
+              <b>(str("Public Repos: "))</b>
+              (str(string_of_int(publicRepos)))
+            </span>
+          | None => ReasonReact.null
+          }
+        )
+
+      </div>
     }
   },
 };

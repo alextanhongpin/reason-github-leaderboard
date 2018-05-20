@@ -1,0 +1,28 @@
+.progress {
+  display: inline-block;
+  height: .5rem;
+}
+
+.leaderboard-language__list { 
+  font-size: var(--scale-200);
+  line-height: 1rem;
+}
+
+.leaderboard-language__item {
+  margin: 1rem 0;
+}
+
+.leaderboard-language__item-count {
+  margin: 0 0 0 .5rem;
+  color: gray;
+}
+
+.leaderboard-language__subheading {
+  color: gray;
+}
+
+.leaderboard-language__last-updated {
+  font-size: var(--scale-200);
+  font-style: italic;
+}
+

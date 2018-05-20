@@ -1,11 +1,21 @@
 [%bs.raw {|require('./index.css')|}];
 [%bs.raw {|require('normalize.css')|}];
 
+let setupSmoothscroll: (_) => (_) = [%bs.raw {|
+  function () {
+    const smoothscroll = require('smoothscroll-polyfill')
+    smoothscroll.polyfill()
+  }
+|}];
+
+setupSmoothscroll();
+
+
 [@bs.module "./registerServiceWorker"]
 external register_service_worker : unit => unit = "default";
 
 ReactDOMRe.renderToElementWithId(
-  <App message="Welcome to React and Reason" />,
+  <App/>,
   "root",
 );
 

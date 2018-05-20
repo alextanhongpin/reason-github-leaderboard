@@ -1,31 +1,17 @@
 let baseUrl = "http://localhost:5000/analytics?type=leaderboard_most_repos";
 
-type repo = {
-  count: int,
-  login: string,
-  avatar_url: option(string),
-  html_url: string
-};
-
 type counter = {
   analyticType: string,
-  repos: list(repo),
+  repos: list(Leaderboard.item),
   createdAt: string,
   updatedAt: string
 };
 
 module Decode = {
-  let repo = json =>
-    Json.Decode.{
-      count: json |> field("count", int),
-      login: json |> field("login", string),
-      avatar_url: json |> field("avatar_url", optional(string)),
-      html_url: json |> field("html_url", string)
-    };
   let counter = json =>
     Json.Decode.{
       analyticType: json |> field("type", string),
-      repos: json |> field("repos", list(repo)),
+      repos: json |> field("repos", list(Leaderboard.Decode.item)),
       createdAt: json |> field("createdAt", string),
       updatedAt: json |> field("updatedAt", string)
     };
@@ -78,27 +64,7 @@ let make = _children => {
   render: self =>
     switch self.state {
     | Loading => <Loader />
-    | Error => <div> (str("Error")) </div>
-    | Success({analyticType, repos, createdAt, updatedAt}) =>
-      <div>
-        <h2> (str("Most repos:")) </h2>
-        (
-          repos
-          |> List.map(({count, login, avatar_url, html_url}) =>
-               <div key=login>
-                 <b> (str(login)) </b>
-                 (
-                   switch avatar_url {
-                   | Some(src) => <img src width="40" height="auto" />
-                   | None => ReasonReact.null
-                   }
-                 )
-                 <div> (str(string_of_int(count))) </div>
-               </div>
-             )
-          |> Array.of_list
-          |> ReasonReact.arrayToElement
-        )
-      </div>
+    | Error => <Error/>
+    | Success({repos}) => <Leaderboard heading="Most Repos" repos />
     }
 };

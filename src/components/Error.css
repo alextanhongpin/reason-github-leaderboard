@@ -1,0 +1,10 @@
+.error {
+  background: var(--gallery);
+  border-radius: .5rem;
+  box-shadow: 0 3px 5px rgba(0, 0, 0, .1);
+  color: darkslategray;
+  margin: auto;
+  max-width: 560px;
+  padding: 1rem;
+  text-align: center;
+}

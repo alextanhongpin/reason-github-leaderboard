@@ -1,5 +1,3 @@
-[%bs.raw {|require('./UserCounter.css')|}];
-
 let baseUrl = "http://localhost:5000/analytics?type=user_count";
 
 type counter = {
@@ -66,11 +64,10 @@ let make = _children => {
   render: self =>
     switch self.state {
     | Loading => <Loader />
-    | Error => <div> (str("Error")) </div>
-    | Success({analyticType, count, createdAt, updatedAt}) =>
-      <div className="user-counter">
-        <h1> (str(string_of_int(count))) </h1>
-        <p> (str("Total Github Users")) </p>
-      </div>
+    | Error => <Error/>
+    | Success({count}) =>
+      <span>
+        (str(Counter.toLocaleString(count)))
+      </span>
     }
 };
