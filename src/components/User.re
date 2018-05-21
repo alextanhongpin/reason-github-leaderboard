@@ -1,7 +1,6 @@
 [%bs.raw {|require('./User.css')|}];
 let str = ReasonReact.string;
 /* https://github.com/reasonml-community/reason-react-example/blob/master/src/fetch/FetchExample.re */
-let baseUrl = "http://localhost:5000/users/";
 
 type user = {
   login: string,
@@ -55,7 +54,7 @@ type action =
 
 let component = ReasonReact.reducerComponent("User");
 
-let make = (~user="", _children) => {
+let make = (~baseUrl, ~user="", _children) => {
   ...component,
   initialState: () => Loading,
   didMount: self => {

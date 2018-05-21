@@ -1,5 +1,3 @@
-let baseUrl = "http://localhost:5000/analytics?type=repo_count";
-
 type counter = {
   analyticType: string,
   count: int,
@@ -31,7 +29,7 @@ type action =
 
 let component = ReasonReact.reducerComponent("RepoCounter");
 
-let make = _children => {
+let make = (~baseUrl, _children) => {
   ...component,
   didMount: self => self.send(Fetch),
   initialState: () => Loading,
@@ -63,9 +61,8 @@ let make = _children => {
     },
   render: self =>
     switch self.state {
-    | Loading => <Loader />
-    | Error => <Error/>
-    | Success({count}) =>
-      <span> (str(Counter.toLocaleString(count))) </span>
+    | Loading => <span> (str("0")) </span>
+    | Error => <Error />
+    | Success({count}) => <span> (str(Counter.toLocaleString(count))) </span>
     }
 };

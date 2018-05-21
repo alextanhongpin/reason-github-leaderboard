@@ -1,7 +1,5 @@
 [%bs.raw {|require('./LeaderboardLanguage.css')|}];
 
-let baseUrl = "http://localhost:5000/analytics?type=leaderboard_languages";
-
 type language = {
   score: int,
   lang: string
@@ -57,7 +55,7 @@ type action =
 
 let component = ReasonReact.reducerComponent("LeaderboardLanguage");
 
-let make = (~heading="", ~subheading="", _children) => {
+let make = (~baseUrl, ~heading="", ~subheading="", _children) => {
   ...component,
   didMount: self => self.send(Fetch),
   initialState: () => Loading,
@@ -90,7 +88,7 @@ let make = (~heading="", ~subheading="", _children) => {
   render: self =>
     switch self.state {
     | Loading => <Loader />
-    | Error => <Error/>
+    | Error => <Error />
     | Success({analyticType, languages, createdAt, updatedAt}) =>
       let max = languages |> List.map(({score}) => score) |> max_list;
       let min = languages |> List.map(({score}) => score) |> min_list;

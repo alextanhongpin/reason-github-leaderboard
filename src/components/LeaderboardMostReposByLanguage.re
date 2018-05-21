@@ -1,5 +1,3 @@
-let baseUrl = "http://localhost:5000/analytics?type=leaderboard_most_repos_by_language";
-
 type counter = {
   analyticType: string,
   repos: list(ViewSwitcher.repo),
@@ -31,7 +29,7 @@ type action =
 
 let component = ReasonReact.reducerComponent("LeaderboardMostReposByLanguage");
 
-let make = (~heading="", _children) => {
+let make = (~baseUrl, ~heading="", _children) => {
   ...component,
   didMount: self => self.send(Fetch),
   initialState: () => Loading,
@@ -64,7 +62,7 @@ let make = (~heading="", _children) => {
   render: self =>
     switch self.state {
     | Loading => <Loader />
-    | Error => <Error/>
+    | Error => <Error />
     | Success({repos, updatedAt}) =>
       let repo = repos |> List.hd;
       <div>

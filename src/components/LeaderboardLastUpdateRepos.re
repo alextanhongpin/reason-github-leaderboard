@@ -1,5 +1,3 @@
-let baseUrl = "http://localhost:5000/analytics?type=leaderboard_last_updated_repos";
-
 type counter = {
   analyticType: string,
   repos: list(Repo.repo),
@@ -31,13 +29,10 @@ type action =
 
 let component = ReasonReact.reducerComponent("LeaderboardLastUpdateRepos");
 
-let make = _children => {
+let make = (~baseUrl, _children) => {
   ...component,
-  didMount: self => {
-    self.send(Fetch);
-    /* let intervalId = Js.Global.setInterval(() => self.send(Fetch), 1250); */
-    /* self.onUnmount(() => Js.Global.clearInterval(intervalId)); */
-  },
+  didMount: self => self.send(Fetch), /* self.onUnmount(() => Js.Global.clearInterval(intervalId)); */
+  /* let intervalId = Js.Global.setInterval(() => self.send(Fetch), 1250); */
   initialState: () => Loading,
   reducer: (action, _state) =>
     switch action {
@@ -68,7 +63,7 @@ let make = _children => {
   render: self =>
     switch self.state {
     | Loading => <Loader />
-    | Error => <Error/>
+    | Error => <Error />
     | Success({analyticType, repos, createdAt, updatedAt}) =>
       <Repo heading="Last Updated" repos />
     }

@@ -1,5 +1,3 @@
-let baseUrl = "http://localhost:5000/analytics?type=leaderboard_most_watchers_repos";
-
 type counter = {
   analyticType: string,
   repos: list(Repo.repo),
@@ -31,7 +29,7 @@ type action =
 
 let component = ReasonReact.reducerComponent("LeaderboardMostWatchersRepos");
 
-let make = _children => {
+let make = (~baseUrl, _children) => {
   ...component,
   didMount: self => self.send(Fetch),
   initialState: () => Loading,
@@ -64,7 +62,7 @@ let make = _children => {
   render: self =>
     switch self.state {
     | Loading => <Loader />
-    | Error => <Error/>
+    | Error => <Error />
     | Success({analyticType, repos, createdAt, updatedAt}) =>
       <Repo heading="Most Watchers" repos />
     }

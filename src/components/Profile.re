@@ -2,8 +2,6 @@
 
 let str = ReasonReact.string;
 
-let baseUrl = "http://localhost:5000/analytics/profiles?login=";
-
 type language = {
   lang: string,
   score: float,
@@ -77,7 +75,7 @@ type action =
 
 let component = ReasonReact.reducerComponent("Profile");
 
-let make = (~user="", _children) => {
+let make = (~baseUrl, ~user="", _children) => {
   ...component,
   initialState: () => Loading,
   didMount: self => {

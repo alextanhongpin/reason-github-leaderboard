@@ -43,9 +43,22 @@ let mapUrlToRoute = (url: ReasonReact.Router.url) =>
   | ["users", user] => ProfilePage(user)
   | _ => HomePage
   };
-
-
 let component = ReasonReact.reducerComponent("App");
+
+module Url = {
+  let baseUrl = "https://api.engineers.my/v1";
+  let profile = baseUrl ++ "/analytics/profiles?login=";
+  let leaderboardLanguage = baseUrl ++ "/analytics?type=leaderboard_languages";
+  let leaderboardLastUpdatedRepos = baseUrl ++ "/analytics?type=leaderboard_last_updated_repos";
+  let leaderboardMostRepos = baseUrl ++ "/analytics?type=leaderboard_most_repos";
+  let leaderboardMostReposByLanguage = baseUrl ++ "/analytics?type=leaderboard_most_repos_by_language";
+
+  let leaderboardMostWatchersRepos = baseUrl ++ "/analytics?type=leaderboard_most_watchers_repos";
+  let leaderboardMostStarsRepos = baseUrl ++ "/analytics?type=leaderboard_most_stars_repos";
+  let repoCounter = baseUrl ++ "/analytics?type=repo_count";
+  let userCounter = baseUrl ++ "/analytics?type=user_count";
+  let user = baseUrl ++ "/users/";
+};
 
 let make = (_children) => {
   ...component,
@@ -59,7 +72,6 @@ let make = (_children) => {
   ],
   render: ({ state, send }) =>
     <div className="App">
-    /* <Link href="/profiles">(str("profiles"))</Link> */
       <Header heading="engineers.my" subheading="Github Stats"/>
       <br/>
       <br/>
@@ -82,11 +94,11 @@ let make = (_children) => {
       <p className="app-subheading">
         (str("We have gathered data from over ")) 
         <b>
-          <UserCounter/>
+          <UserCounter baseUrl=(Url.userCounter)/>
         </b>
         (str(" Github users and "))
         <b>
-          <RepoCounter/>
+          <RepoCounter baseUrl=(Url.repoCounter)/>
         </b>
         (str(" repos from Malaysia to come up with this summary."))
       </p>
@@ -99,16 +111,16 @@ let make = (_children) => {
           switch state.route {
             | HomePage =>
               <div className="home-page">          
-                <LeaderboardLastUpdateRepos/>
-                <LeaderboardMostStarsRepos/>
-                <LeaderboardMostRepos/>
-                <LeaderboardLanguage heading="Top Languages" subheading="View top languages that are used in Malaysia."/>
-                <LeaderboardMostReposByLanguage heading="Most Repos by Language"/>
+                <LeaderboardLastUpdateRepos baseUrl=(Url.leaderboardLastUpdatedRepos)/>
+                <LeaderboardMostStarsRepos baseUrl=(Url.leaderboardMostStarsRepos)/>
+                <LeaderboardMostRepos baseUrl=(Url.leaderboardMostRepos)/>
+                <LeaderboardLanguage baseUrl=(Url.leaderboardLanguage) heading="Top Languages" subheading="View top languages that are used in Malaysia."/>
+                <LeaderboardMostReposByLanguage baseUrl=(Url.leaderboardMostReposByLanguage) heading="Most Repos by Language"/>
               </div>
             | ProfilePage(user) => 
               <div>
-                <User user/>
-                <Profile user/>
+                <User baseUrl=(Url.user) user/>
+                <Profile baseUrl=(Url.profile) user/>
               </div>
             }
         }
