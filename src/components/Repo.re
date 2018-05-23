@@ -73,7 +73,7 @@ let make = (~heading="", ~repos: list(repo), _children) => {
                    language
                  }
                ) =>
-               <div key=html_url className="repo">
+               <a key=html_url className="repo link" href=(html_url) target="_blank">
                  <div className="repo__image-holder">
                    (
                      switch owner.avatar_url {
@@ -111,7 +111,7 @@ let make = (~heading="", ~repos: list(repo), _children) => {
                      </div>
                    </div>
                  </div>
-               </div>
+               </a>
              )
           |> Array.of_list
           |> ReasonReact.array
