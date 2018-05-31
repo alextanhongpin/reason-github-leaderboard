@@ -21,3 +21,45 @@
   border-radius: 1rem;
   margin: .5rem;
 }
+
+/* Profile */
+
+.profile-holder {
+  margin: auto;
+  max-width: 560px;
+  width: 100%;
+  text-align: center;
+  font-size: var(--scale-200);
+}
+
+.tag {
+  color: darkslategray;
+  display: inline-block;
+  min-height: 1rem;
+  line-height: 1rem;
+  border-radius: 1rem;
+  margin: .5rem;
+}
+
+.keyword {
+  background: var(--gallery);
+  height: 1rem;
+  line-height: 1rem;
+  padding: 0 .5rem;
+  border-radius: .5rem;
+  margin: 0 0.25rem;
+  display: inline-block;
+}
+
+.matches-holder {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min-content, 100px));
+  justify-content: center;
+  grid-row-gap: 2rem;
+  align-items: center;
+}
+
+.matches-item__img {
+  border-radius: 50%;
+  border: 1px solid var(--gallery);
+}
