@@ -24,7 +24,7 @@ module Decode = {
       updatedAt: json |> field("updatedAt", string)
     };
   let response = json =>
-    Json.Decode.{data: json |> field("data", optional(data))};
+    Json.Decode.{data: json |> optional(field("data", data))};
 };
 
 let str = ReasonReact.string;

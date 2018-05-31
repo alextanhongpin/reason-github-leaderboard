@@ -1,9 +1,9 @@
 [%bs.raw {|require('./User.css')|}];
 
-let rec sum = (l: list(int)) =>
+let rec summarize = (l: list(int)) =>
   switch l {
   | [] => 0
-  | [head, ...tail] => head + sum(tail)
+  | [head, ...tail] => head + summarize(tail)
   };
 
 let str = ReasonReact.string;
@@ -50,14 +50,12 @@ module Decode = {
       name: json |> field("name", string),
       count: json |> field("count", int)
     };
-
   let user = json =>
     Json.Decode.{
       login: json |> field("login", string),
       score: json |> field("score", float),
       avatarUrl: json |> field("avatarUrl", optional(string))
     };
-
   let data = json =>
     Json.Decode.{
       name: json |> field("name", string),
@@ -65,11 +63,11 @@ module Decode = {
       updatedAt: json |> field("updatedAt", string),
       fetchedAt: json |> field("fetchedAt", string),
       login: json |> field("login", string),
-      bio: json |> field("bio", optional(string)),
-      location: json |> field("location", optional(string)),
-      email: json |> field("email", optional(string)),
-      avatarUrl: json |> field("avatarUrl", optional(string)),
-      websiteUrl: json |> field("websiteUrl", optional(string)),
+      bio: json |> optional(field("bio", string)),
+      location: json |> optional(field("location", string)),
+      email: json |> optional(field("email", string)),
+      avatarUrl: json |> optional(field("avatarUrl", string)),
+      websiteUrl: json |> optional(field("websiteUrl", string)),
       repositories: json |> field("repositories", int),
       gists: json |> field("gists", int),
       followers: json |> field("followers", int),
@@ -77,12 +75,12 @@ module Decode = {
       watchers: json |> field("watchers", int),
       stargazers: json |> field("stargazers", int),
       forks: json |> field("forks", int),
-      languages: json |> field("languages", optional(list(item))),
-      keywords: json |> field("keywords", optional(list(item))),
-      matches: json |> field("matches", optional(list(user)))
+      languages: json |> optional(field("languages", list(item))),
+      keywords: json |> optional(field("keywords", list(item))),
+      matches: json |> optional(field("matches", list(user)))
     };
   let response = json =>
-    Json.Decode.{data: json |> field("data", optional(data))};
+    Json.Decode.{data: json |> optional(field("data", data))};
 };
 
 type state =
@@ -134,7 +132,7 @@ let make = (~baseUrl, ~user="", _children) => {
       <Error subheading="The user might not exist or has been deleted." />
     | Success(response) =>
       switch response.data {
-      | Some(({
+      | Some({
           name,
           createdAt,
           login,
@@ -151,10 +149,11 @@ let make = (~baseUrl, ~user="", _children) => {
           matches,
           keywords,
           languages
-        })) =>
+        }) =>
         let sumRepos =
           switch languages {
-          | Some(languages) => languages |> List.map(({count}) => count) |> sum
+          | Some(languages) =>
+            languages |> List.map(({count}) => count) |> summarize
           | None => 0
           };
         <div>
@@ -183,7 +182,9 @@ let make = (~baseUrl, ~user="", _children) => {
             )
             <span className="tag">
               <b> (str("Github: ")) </b>
-              <a href="" target="_blank"> (str("https://github.com/" ++ login)) </a>
+              <a href="" target="_blank">
+                (str("https://github.com/" ++ login))
+              </a>
             </span>
             (
               switch bio {
@@ -275,7 +276,7 @@ let make = (~baseUrl, ~user="", _children) => {
                              className="keyword"
                              style=(
                                ReactDOMRe.Style.make(
-                                 ~background=Color.hexToRgbA(name, 0.2),
+                                 ~background=Color.hexToRgbA(color, 0.2),
                                  ~color,
                                  ()
                                )
@@ -308,36 +309,35 @@ let make = (~baseUrl, ~user="", _children) => {
                 <div className="matches-holder">
                   (
                     matches
-                    |> List.map(({login, avatarUrl}: user)
-                         =>
-                           <a
-                             href=("/users/" ++ login)
-                             className="matches-item link"
-                             key=login>
-                             <div>
-                               (
-                                 switch avatarUrl {
-                                 | Some(avatarUrl) =>
-                                   <img
-                                     className="matches-item__img"
-                                     src=avatarUrl
-                                     width="80"
-                                     height="auto"
-                                   />
-                                 | None =>
-                                   <img
-                                     className="matches-item__img"
-                                     width="80"
-                                     height="auto"
-                                   />
-                                 }
-                               )
-                             </div>
-                             <b className="matches-item__name">
-                               (ReasonReact.string(login))
-                             </b>
-                           </a>
-                         )
+                    |> List.map(({login, avatarUrl}: user) =>
+                         <a
+                           href=("/users/" ++ login)
+                           className="matches-item link"
+                           key=login>
+                           <div>
+                             (
+                               switch avatarUrl {
+                               | Some(avatarUrl) =>
+                                 <img
+                                   className="matches-item__img"
+                                   src=avatarUrl
+                                   width="80"
+                                   height="auto"
+                                 />
+                               | None =>
+                                 <img
+                                   className="matches-item__img"
+                                   width="80"
+                                   height="auto"
+                                 />
+                               }
+                             )
+                           </div>
+                           <b className="matches-item__name">
+                             (ReasonReact.string(login))
+                           </b>
+                         </a>
+                       )
                     |> Array.of_list
                     |> ReasonReact.array
                   )

@@ -11,7 +11,7 @@ module Decode = {
     Json.Decode.{
       count: json |> field("count", int),
       login: json |> field("login", string),
-      avatarUrl: json |> field("avatarUrl", optional(string))
+      avatarUrl: json |> optional(field("avatarUrl", string))
     };
 };
 

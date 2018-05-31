@@ -12,9 +12,7 @@ type data = {
   updatedAt: string
 };
 
-type response = {
-  data: option(data),
-}
+type response = {data: option(data)};
 
 module Decode = {
   let language = json =>
@@ -30,9 +28,7 @@ module Decode = {
       updatedAt: json |> field("updatedAt", string)
     };
   let response = json =>
-    Json.Decode.{
-      data: json |> field("data", optional(data))
-    };
+    Json.Decode.{data: json |> optional(field("data", data))};
 };
 
 let rec max_list = list =>
@@ -99,7 +95,7 @@ let make = (~baseUrl, ~heading="", ~subheading="", _children) => {
     | Error => <Error />
     | Success(response) =>
       switch response.data {
-      | Some({analyticType, languages, createdAt, updatedAt}) => {
+      | Some({analyticType, languages, createdAt, updatedAt}) =>
         let max = languages |> List.map(({count}) => count) |> max_list;
         let min = languages |> List.map(({count}) => count) |> min_list;
         <div>
@@ -107,41 +103,42 @@ let make = (~baseUrl, ~heading="", ~subheading="", _children) => {
           <p className="leaderboard-language__last-updated">
             (str("Last updated " ++ Date.parseDate(updatedAt)))
           </p>
-          <p className="leaderboard-language__subheading"> (str(subheading)) </p>
+          <p className="leaderboard-language__subheading">
+            (str(subheading))
+          </p>
           <div className="leaderboard-language__list">
             (
               languages
               |> List.map(({count, name}) => {
-                  let width =
-                    ceil(float_of_int(count) /. float_of_int(max) *. 100.);
-                  <div className="leaderboard-language__item" key=name>
-                    <div>
-                      <span className="leaderboad-language__item-language">
-                        (str(name))
-                      </span>
-                      <span className="leaderboard-language__item-count">
-                        (str(string_of_int(count)))
-                      </span>
-                    </div>
-                    <span
-                      className="progress"
-                      style=(
-                        ReactDOMRe.Style.make(
-                          ~width=string_of_float(width) ++ "%",
-                          ~background=Color.getColor(name),
-                          ()
-                        )
-                      )
-                    />
-                  </div>;
-                })
+                   let width =
+                     ceil(float_of_int(count) /. float_of_int(max) *. 100.);
+                   <div className="leaderboard-language__item" key=name>
+                     <div>
+                       <span className="leaderboad-language__item-language">
+                         (str(name))
+                       </span>
+                       <span className="leaderboard-language__item-count">
+                         (str(string_of_int(count)))
+                       </span>
+                     </div>
+                     <span
+                       className="progress"
+                       style=(
+                         ReactDOMRe.Style.make(
+                           ~width=string_of_float(width) ++ "%",
+                           ~background=Color.getColor(name),
+                           ()
+                         )
+                       )
+                     />
+                   </div>;
+                 })
               |> Array.of_list
               |> ReasonReact.array
             )
           </div>
-        </div>
-    }
-     | None => ReasonReact.null
-     }
+        </div>;
+      | None => ReasonReact.null
+      }
     }
 };

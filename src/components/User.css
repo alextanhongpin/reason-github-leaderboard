@@ -32,15 +32,6 @@
   font-size: var(--scale-200);
 }
 
-.tag {
-  color: darkslategray;
-  display: inline-block;
-  min-height: 1rem;
-  line-height: 1rem;
-  border-radius: 1rem;
-  margin: .5rem;
-}
-
 .keyword {
   background: var(--gallery);
   height: 1rem;

@@ -25,14 +25,14 @@ module Decode = {
       name: json |> field("name", string),
       createdAt: json |> field("createdAt", string),
       updatedAt: json |> field("updatedAt", string),
-      description: json |> field("description", optional(string)),
-      languages: json |> field("languages", optional(list(string))),
-      homepageUrl: json |> field("homepageUrl", optional(string)),
+      description: json |> optional(field("description", string)),
+      languages: json |> optional(field("languages", list(string))),
+      homepageUrl: json |> optional(field("homepageUrl", string)),
       forkCount: json |> field("forkCount", int),
       isFork: json |> field("isFork", bool),
       nameWithOwner: json |> field("nameWithOwner", string),
       login: json |> field("login", string),
-      avatarUrl: json |> field("avatarUrl", optional(string)),
+      avatarUrl: json |> optional(field("avatarUrl", string)),
       stargazers: json |> field("stargazers", int),
       watchers: json |> field("watchers", int),
       url: json |> field("url", string)
@@ -43,71 +43,70 @@ let component = ReasonReact.statelessComponent("RepoList");
 
 let make = (~heading="", ~repos: list(repo), _children) => {
   ...component,
-  render: _self => {
+  render: _self =>
     <div className="leaderboard-last-updated-repos">
-       <h2> (str(heading)) </h2> 
+      <h2> (str(heading)) </h2>
       <div className="repo-holder">
-           (
-             repos
-             |> List.map(
-                  (
-                    {
-                     updatedAt,
-                     description,
-                     languages,
-                     nameWithOwner,
-                     avatarUrl,
-                     stargazers,
-                     url,
-                    }
-                  ) =>
-                  <a key=url className="repo link" href=(url) target="_blank">
-                    <div className="repo__image-holder">
-                      (
-                        switch avatarUrl {
-                        | Some(src) => <img src width="30" height="auto" />
-                        | None => <div className="placeholder" />
-                        }
-                      )
-                    </div>
-                    <div className="repo__info-holder">
-                      <b> (str(nameWithOwner)) </b>
-                      <p className="repo__description">
-                        (
-                          switch description {
-                          | Some(description) => str(description)
-                          | None => str("No description available")
-                          }
-                        )
-                      </p>
-                      <div className="repo__footer">
-                        <div>
-                          <span className="icon-star" />
-                          (str(" "))
-                          (str(string_of_int(stargazers)))
-                        </div>
-
-                        (
-                          switch languages {
-                          | Some(languages) => switch languages {
-                            | [] => ReasonReact.null
-                            | [language, ...rest] => <Language language=Some(language) />
-                            }
-                          | None => ReasonReact.null
-                          }
-                        )
-                        
-                        <div className="repo__footer-date">
-                          (str(Date.parseDate(updatedAt)))
-                        </div>
-                      </div>
-                    </div>
-                  </a>
-                )
-             |> Array.of_list
-             |> ReasonReact.array
-           )
-         </div>
-         </div>
-                        },
+        (
+          repos
+          |> List.map(
+               (
+                 {
+                   updatedAt,
+                   description,
+                   languages,
+                   nameWithOwner,
+                   avatarUrl,
+                   stargazers,
+                   url
+                 }
+               ) =>
+               <a key=url className="repo link" href=url target="_blank">
+                 <div className="repo__image-holder">
+                   (
+                     switch avatarUrl {
+                     | Some(src) => <img src width="30" height="auto" />
+                     | None => <div className="placeholder" />
+                     }
+                   )
+                 </div>
+                 <div className="repo__info-holder">
+                   <b> (str(nameWithOwner)) </b>
+                   <p className="repo__description">
+                     (
+                       switch description {
+                       | Some(description) => str(description)
+                       | None => str("No description available")
+                       }
+                     )
+                   </p>
+                   <div className="repo__footer">
+                     <div>
+                       <span className="icon-star" />
+                       (str(" "))
+                       (str(string_of_int(stargazers)))
+                     </div>
+                     (
+                       switch languages {
+                       | Some(languages) =>
+                         switch languages {
+                         | [] => ReasonReact.null
+                         | [language, ...rest] =>
+                           <Language language=(Some(language)) />
+                         }
+                       | None => ReasonReact.null
+                       }
+                     )
+                     <div className="repo__footer-date">
+                       (str(Date.parseDate(updatedAt)))
+                     </div>
+                   </div>
+                 </div>
+               </a>
+             )
+          |> Array.of_list
+          |> ReasonReact.array
+        )
+      </div>
+    </div>
 };
