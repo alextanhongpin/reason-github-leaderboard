@@ -1,4 +1,4 @@
-VERSION := 1.0.2
+VERSION := 1.0.4
 
 docker:
 	@docker build -t alextanhongpin/nginx-reason .

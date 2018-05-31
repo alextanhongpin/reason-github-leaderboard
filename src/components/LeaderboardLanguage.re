@@ -128,7 +128,7 @@ let make = (~baseUrl, ~heading="", ~subheading="", _children) => {
                       style=(
                         ReactDOMRe.Style.make(
                           ~width=string_of_float(width) ++ "%",
-                          ~background=Color.StringMap.find(name, Color.colors),
+                          ~background=Color.getColor(name),
                           ()
                         )
                       )

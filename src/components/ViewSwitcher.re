@@ -39,8 +39,7 @@ let make = (~users: list(users), ~language="", _children) => {
           users
           |> List.map(({language}) => language)
           |> List.map(language => {
-               let color: string =
-                 Color.StringMap.find(language, Color.colors);
+               let color: string = Color.getColor(language);
                <div
                  className="tag-language"
                  key=language

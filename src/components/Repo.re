@@ -43,7 +43,7 @@ let component = ReasonReact.statelessComponent("RepoList");
 
 let make = (~heading="", ~repos: list(repo), _children) => {
   ...component,
-  render: self => {
+  render: _self => {
     <div className="leaderboard-last-updated-repos">
        <h2> (str(heading)) </h2> 
       <div className="repo-holder">
@@ -52,19 +52,12 @@ let make = (~heading="", ~repos: list(repo), _children) => {
              |> List.map(
                   (
                     {
-                     name,
-                     createdAt,
                      updatedAt,
                      description,
                      languages,
-                     homepageUrl,
-                     forkCount,
-                     isFork,
                      nameWithOwner,
-                     login,
                      avatarUrl,
                      stargazers,
-                     watchers,
                      url,
                     }
                   ) =>
@@ -97,7 +90,7 @@ let make = (~heading="", ~repos: list(repo), _children) => {
                         (switch languages {
                         | Some(languages) => switch languages {
                         | [] => ReasonReact.null
-                        | [language,...rest] => <Language language=Some(language) />
+                        | [language] => <Language language=Some(language) />
                         }
                         | None => ReasonReact.null
                         })

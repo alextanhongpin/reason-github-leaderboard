@@ -1,17 +1,17 @@
 let parseDate: string => string = [%bs.raw
   {|
   function (timestamp) {
-    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
-    const dateObj = new Date(timestamp)
-    const currentYear = new Date().getFullYear()
-    const year = dateObj.getFullYear()
-    const month = dateObj.getMonth()
-    const date = dateObj.getDate()
+    var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+    var dateObj = new Date(timestamp)
+    var currentYear = new Date().getFullYear()
+    var year = dateObj.getFullYear()
+    var month = dateObj.getMonth()
+    var date = dateObj.getDate()
 
     if (year === currentYear) {
-      return `${months[month]} ${date}`
+      return [months[month], date].join(' ').trim()
     }
-    return `${months[month]} ${date} ${year}`
+    return [months[month], date, year].join(' ').trim()
   }
 |}
 ];

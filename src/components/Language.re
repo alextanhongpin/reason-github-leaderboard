@@ -11,10 +11,7 @@ let make = (~language, _children) => {
         <span
           className="language-icon"
           style=(
-            ReactDOMRe.Style.make(
-              ~background=Color.StringMap.find(language, Color.colors),
-              ()
-            )
+            ReactDOMRe.Style.make(~background=Color.getColor(language), ())
           )
         />
         (str(" "))

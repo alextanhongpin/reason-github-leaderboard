@@ -69,7 +69,7 @@ let make = (~baseUrl, ~heading="", _children) => {
     | Error => <Error />
     | Success(response) =>
       switch response.data {
-      | Some({users, updatedAt}) =>
+      | Some({users}) =>
         let user = users |> List.hd;
         <div>
           <h2> (str(heading)) </h2>

@@ -8,7 +8,7 @@ type item = {
 
 type match = {
   login: string,
-  score: float,
+  /* score: float, */
   avatarUrl: option(string),
 };
 
@@ -52,7 +52,7 @@ module Decode = {
   let match = json => 
     Json.Decode.{
       login: json |> field("login", string),
-      score: json |> field("score", float),
+      /* score: json |> field("score", float), */
       avatarUrl: json |> field("avatarUrl", optional(string))
     };
   let user = json =>
@@ -100,7 +100,7 @@ let make = (~baseUrl, ~user="", _children) => {
   didMount: self => {
     self.send(Fetch)
   },
-  reducer: (action, state) =>
+  reducer: (action, _state) =>
     switch (action) {
     | Fetch =>
       ReasonReact.UpdateWithSideEffects(
@@ -135,7 +135,7 @@ let make = (~baseUrl, ~user="", _children) => {
     | Loading => <Loader/>
     | Error => <Error subheading="The user might not exist or has been deleted."/>
     | Success(response) => switch response.data {
-      | Some({name,createdAt,updatedAt,login,bio,location,email,avatarUrl,websiteUrl,repositories,gists,followers,following,watchers,stargazers,forks, matches, keywords, languages}) => {
+      | Some({name,createdAt,login,bio,avatarUrl,websiteUrl,repositories,gists,followers,following,watchers,stargazers,forks, matches, keywords, languages}) => {
         let htmlUrl = "https://github.com/" ++ login;
         let sumRepos = switch languages {
         | Some(languages) => languages |> List.map(({ count }) => count) |> sum
@@ -248,10 +248,7 @@ let make = (~baseUrl, ~user="", _children) => {
               languages
               |> List.map(
                 ({ name, count }) => {
-                  let color = switch (Color.StringMap.find(name, Color.colors)) {
-                  | exception Not_found => "#000000"
-                  | result => result
-                  };
+                  let color = Color.getColor(name);
                   let percentage = int_of_float(float_of_int(count) /. float_of_int(sumRepos) *. 100.0);
                   if (percentage > 0) {
                     <span key=(name) className="keyword"
@@ -285,8 +282,8 @@ let make = (~baseUrl, ~user="", _children) => {
           <div className="matches-holder">
           (
             matches
-            |> List.map(({login, score, avatarUrl}) => {
-              let htmlUrl = "https://github.com/" ++ login;
+            |> List.map(({login, avatarUrl}: match) => {
+              /* let htmlUrl = "https://github.com/" ++ login; */
                 <a href=("/users/" ++ login) className="matches-item link" key=login>
                   <div>
                     (switch avatarUrl {
