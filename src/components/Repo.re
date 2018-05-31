@@ -87,13 +87,15 @@ let make = (~heading="", ~repos: list(repo), _children) => {
                           (str(string_of_int(stargazers)))
                         </div>
 
-                        (switch languages {
-                        | Some(languages) => switch languages {
-                        | [] => ReasonReact.null
-                        | [language] => <Language language=Some(language) />
-                        }
-                        | None => ReasonReact.null
-                        })
+                        (
+                          switch languages {
+                          | Some(languages) => switch languages {
+                            | [] => ReasonReact.null
+                            | [language, ...rest] => <Language language=Some(language) />
+                            }
+                          | None => ReasonReact.null
+                          }
+                        )
                         
                         <div className="repo__footer-date">
                           (str(Date.parseDate(updatedAt)))

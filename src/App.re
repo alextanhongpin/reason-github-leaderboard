@@ -110,20 +110,19 @@ let make = _children => {
         <Loader/>
       } else {
         switch state.route {
-          | HomePage =>
-            <div className="home-page">
-              <LeaderboardLastUpdateRepos heading="Most Recent" baseUrl=(Url.leaderboardLastUpdatedRepos)/>
-              <LeaderboardMostStarsRepos heading="Most Stars" baseUrl=(Url.leaderboardMostStarsRepos)/>
-              <LeaderboardMostRepos heading="Most Repos" baseUrl=(Url.leaderboardMostRepos)/>
-              <LeaderboardLanguage heading="Top Languages" subheading="View top languages that are used in Malaysia."  baseUrl=(Url.leaderboardLanguage)/>
-              <LeaderboardMostReposByLanguage heading="Most Repos by Language" baseUrl=(Url.leaderboardMostReposByLanguage) />
-            </div>
           | ProfilePage(user) =>
             <div>
               <User baseUrl=(Url.user) user/>
-              /* <Profile baseUrl=(Url.profile) user/> */
             </div>
-          }
+          | HomePage =>
+            <div className="home-page">
+            <LeaderboardLastUpdateRepos heading="Most Recent" baseUrl=(Url.leaderboardLastUpdatedRepos)/>
+            <LeaderboardMostStarsRepos heading="Most Stars" baseUrl=(Url.leaderboardMostStarsRepos)/>
+            <LeaderboardMostRepos heading="Most Repos" baseUrl=(Url.leaderboardMostRepos)/>
+            <LeaderboardLanguage heading="Top Languages" subheading="View top languages that are used in Malaysia."  baseUrl=(Url.leaderboardLanguage)/>
+            <LeaderboardMostReposByLanguage heading="Most Repos by Language" baseUrl=(Url.leaderboardMostReposByLanguage) />
+            </div>
+        }
       }
     ) 
     </div>
