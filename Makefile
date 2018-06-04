@@ -1,4 +1,4 @@
-VERSION := 1.0.6
+VERSION := 1.0.8
 
 docker:
 	@docker build -t alextanhongpin/nginx-reason .
@@ -8,3 +8,6 @@ tag:
 
 push:
 	@docker push alextanhongpin/nginx-reason:${VERSION} 
+
+production:
+	make docker && make tag && make push

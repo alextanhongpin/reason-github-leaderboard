@@ -20,7 +20,7 @@ type user = {
 };
 
 type data = {
-  name: string,
+  name: option(string),
   createdAt: string,
   updatedAt: string,
   fetchedAt: string,
@@ -30,13 +30,13 @@ type data = {
   email: option(string),
   avatarUrl: option(string),
   websiteUrl: option(string),
-  repositories: int,
-  gists: int,
-  followers: int,
-  following: int,
-  watchers: int,
-  stargazers: int,
-  forks: int,
+  repositories: option(int),
+  gists: option(int),
+  followers: option(int),
+  following: option(int),
+  watchers: option(int),
+  stargazers: option(int),
+  forks: option(int),
   languages: option(list(item)),
   keywords: option(list(item)),
   matches: option(list(user))
@@ -54,11 +54,11 @@ module Decode = {
     Json.Decode.{
       login: json |> field("login", string),
       score: json |> field("score", float),
-      avatarUrl: json |> field("avatarUrl", optional(string))
+      avatarUrl: json |> optional(field("avatarUrl", string))
     };
   let data = json =>
     Json.Decode.{
-      name: json |> field("name", string),
+      name: json |> optional(field("name", string)),
       createdAt: json |> field("createdAt", string),
       updatedAt: json |> field("updatedAt", string),
       fetchedAt: json |> field("fetchedAt", string),
@@ -68,13 +68,13 @@ module Decode = {
       email: json |> optional(field("email", string)),
       avatarUrl: json |> optional(field("avatarUrl", string)),
       websiteUrl: json |> optional(field("websiteUrl", string)),
-      repositories: json |> field("repositories", int),
-      gists: json |> field("gists", int),
-      followers: json |> field("followers", int),
-      following: json |> field("following", int),
-      watchers: json |> field("watchers", int),
-      stargazers: json |> field("stargazers", int),
-      forks: json |> field("forks", int),
+      repositories: json |> optional(field("repositories", int)),
+      gists: json |> optional(field("gists", int)),
+      followers: json |> optional(field("followers", int)),
+      following: json |> optional(field("following", int)),
+      watchers: json |> optional(field("watchers", int)),
+      stargazers: json |> optional(field("stargazers", int)),
+      forks: json |> optional(field("forks", int)),
       languages: json |> optional(field("languages", list(item))),
       keywords: json |> optional(field("keywords", list(item))),
       matches: json |> optional(field("matches", list(user)))
@@ -165,7 +165,12 @@ let make = (~baseUrl, ~user="", _children) => {
               }
             )
             <h1> (str(login)) </h1>
-            <p> (str(name)) </p>
+            (
+              switch name {
+              | Some(name) => <p> (str(name)) </p>
+              | None => ReasonReact.null
+              }
+            )
             <span className="tag">
               <b> (str("Created: ")) </b>
               (str(Date.parseDate(createdAt)))
@@ -196,43 +201,85 @@ let make = (~baseUrl, ~user="", _children) => {
               | None => ReasonReact.null
               }
             )
-            <span className="tag">
-              <b> (str("Followers: ")) </b>
-              (str(string_of_int(followers)))
-            </span>
-            <span className="tag">
-              <b> (str("Following: ")) </b>
-              (str(string_of_int(following)))
-            </span>
-            <span className="tag">
-              <b> (str("Public Gists: ")) </b>
-              (str(string_of_int(gists)))
-            </span>
-            <span className="tag">
-              <b> (str("Public Repos: ")) </b>
-              (str(string_of_int(repositories)))
-            </span>
+            (
+              switch followers {
+              | Some(followers) =>
+                <span className="tag">
+                  <b> (str("Followers: ")) </b>
+                  (str(string_of_int(followers)))
+                </span>
+              | None => ReasonReact.null
+              }
+            )
+            (
+              switch following {
+              | Some(following) =>
+                <span className="tag">
+                  <b> (str("Following: ")) </b>
+                  (str(string_of_int(following)))
+                </span>
+              | None => ReasonReact.null
+              }
+            )
+            (
+              switch gists {
+              | Some(gists) =>
+                <span className="tag">
+                  <b> (str("Public Gists: ")) </b>
+                  (str(string_of_int(gists)))
+                </span>
+              | None => ReasonReact.null
+              }
+            )
+            (
+              switch repositories {
+              | Some(repositories) =>
+                <span className="tag">
+                  <b> (str("Public Repos: ")) </b>
+                  (str(string_of_int(repositories)))
+                </span>
+              | None => ReasonReact.null
+              }
+            )
           </div>
           /* PROFILE */
           <div className="profile-holder">
-            <span
-              className="tag"
-              title="The total count of stars this user has for all repos">
-              <b> (str("Stars: ")) </b>
-              (str(string_of_int(stargazers)))
-            </span>
-            <span
-              className="tag"
-              title="The total count of watchers this user have">
-              <b> (str("Watchers: ")) </b>
-              (str(string_of_int(watchers)))
-            </span>
-            <span
-              className="tag"
-              title="The total count of forks this userhas for all repos">
-              <b> (str("Forks: ")) </b>
-              (str(string_of_int(forks)))
-            </span>
+            (
+              switch stargazers {
+              | Some(stargazers) =>
+                <span
+                  className="tag"
+                  title="The total count of stars this user has for all repos">
+                  <b> (str("Stars: ")) </b>
+                  (str(string_of_int(stargazers)))
+                </span>
+              | None => ReasonReact.null
+              }
+            )
+            (
+              switch watchers {
+              | Some(watchers) =>
+                <span
+                  className="tag"
+                  title="The total count of watchers this user have">
+                  <b> (str("Watchers: ")) </b>
+                  (str(string_of_int(watchers)))
+                </span>
+              | None => ReasonReact.null
+              }
+            )
+            (
+              switch forks {
+              | Some(forks) =>
+                <span
+                  className="tag"
+                  title="The total count of forks this userhas for all repos">
+                  <b> (str("Forks: ")) </b>
+                  (str(string_of_int(forks)))
+                </span>
+              | None => ReasonReact.null
+              }
+            )
             (
               switch keywords {
               | Some(keywords) =>
