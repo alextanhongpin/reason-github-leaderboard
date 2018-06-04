@@ -1,6 +1,6 @@
 type data = {
   analyticType: string,
-  users: option(list(Leaderboard.item)),
+  repos: list(Repo.repo),
   createdAt: string,
   updatedAt: string
 };
@@ -11,7 +11,7 @@ module Decode = {
   let data = json =>
     Json.Decode.{
       analyticType: json |> field("type", string),
-      users: json |> optional(field("users", list(Leaderboard.Decode.item))),
+      repos: json |> field("repos", list(Repo.Decode.repo)),
       createdAt: json |> field("createdAt", string),
       updatedAt: json |> field("updatedAt", string)
     };
@@ -31,7 +31,7 @@ type action =
   | FetchSuccess(response)
   | FetchError;
 
-let component = ReasonReact.reducerComponent("LeaderboardMostRepos");
+let component = ReasonReact.reducerComponent("LeaderboardMostForks");
 
 let make = (~heading, ~baseUrl, _children) => {
   ...component,
@@ -69,11 +69,7 @@ let make = (~heading, ~baseUrl, _children) => {
     | Error => <Error />
     | Success(response) =>
       switch response.data {
-      | Some(data) =>
-        switch data.users {
-        | Some(users) => <Leaderboard heading repos=users />
-        | None => ReasonReact.null
-        }
+      | Some(data) => <Repo heading repos=data.repos />
       | None => ReasonReact.null
       }
     }

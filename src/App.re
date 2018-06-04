@@ -46,7 +46,8 @@ let mapUrlToRoute = (url: ReasonReact.Router.url) =>
 let component = ReasonReact.reducerComponent("App");
 
 module Url = {
-  let baseUrl = "https://api.engineers.my/v1";
+  /* let baseUrl = "https://api.engineers.my/v1"; */
+  let baseUrl = "http://localhost:8080";
   let leaderboardLanguage = baseUrl ++ "/stats?type=languages_most_popular";
   let leaderboardLastUpdatedRepos = baseUrl ++ "/stats?type=repos_most_recent";
   let repoCounter = baseUrl ++ "/stats?type=repo_count";
@@ -54,7 +55,9 @@ module Url = {
   let leaderboardMostRepos = baseUrl ++ "/stats?type=repo_count_by_user";
   let leaderboardMostReposByLanguage = baseUrl ++ "/stats?type=repos_by_language";
   let leaderboardMostStarsRepos = baseUrl ++ "/stats?type=repos_most_stars";
-
+  let leaderboardMostForks = baseUrl ++ "/stats?type=repos_most_forks";
+  
+  let leaderboardUsersByCompany = baseUrl ++  "/stats?type=users_by_company";
   let user = baseUrl ++ "/users/"; 
 };
 
@@ -116,9 +119,11 @@ let make = _children => {
             </div>
           | HomePage =>
             <div className="home-page">
+            <LeaderboardUsersByCompany heading="Companies Around Malaysia" baseUrl=(Url.leaderboardUsersByCompany)/>
             <LeaderboardLastUpdateRepos heading="Most Recent" baseUrl=(Url.leaderboardLastUpdatedRepos)/>
             <LeaderboardMostStarsRepos heading="Most Stars" baseUrl=(Url.leaderboardMostStarsRepos)/>
             <LeaderboardMostRepos heading="Most Repos" baseUrl=(Url.leaderboardMostRepos)/>
+            <LeaderboardMostForks heading="Most Forks" baseUrl=(Url.leaderboardMostForks)/>
             <LeaderboardLanguage heading="Top Languages" subheading="View top languages that are used in Malaysia."  baseUrl=(Url.leaderboardLanguage)/>
             <LeaderboardMostReposByLanguage heading="Most Repos by Language" baseUrl=(Url.leaderboardMostReposByLanguage) />
             </div>

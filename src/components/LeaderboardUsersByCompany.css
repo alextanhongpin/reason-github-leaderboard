@@ -1,0 +1,33 @@
+.company-holder {
+  display: grid;
+  grid-row-gap: 1rem;
+}
+
+.company:not(:last-child) {
+  border-bottom: 1px solid var(--gallery);
+  padding: 0 0 var(--scale-600) 0;
+}
+
+.company-user-holder {
+  display: grid;
+  grid-column-gap: var(--scale-50);
+  grid-row-gap: var(--scale-50);
+  grid-template-columns: repeat(auto-fill, 30px);
+}
+
+.company-subheading {
+  color: darkslategray;
+}
+
+.company-user-image {
+  display: inline-block;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  overflow: hidden;
+}
+
+.company-user-image img {
+  display: inline-block;
+  border: 1px solid var(--gallery);
+}
